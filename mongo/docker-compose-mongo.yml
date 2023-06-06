@@ -1,0 +1,31 @@
+version: "3.8"
+services:
+  docker_mongodb:
+    image: mongo:4.0
+    container_name: "docker_mongodb"
+    environment:
+      TZ: Asia/Taipei
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: root
+    volumes:
+      - ./mongodb/mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
+
+      #- ./MongoDB/mongo-volume/data-db:/data/db
+      #- ./files/mongo-volume/home-mongodb:/home/mongodb
+    ports:
+       - 27017:27017
+    expose:
+      - "27017"
+  mongo_seed:
+    image: mongo:4.0
+    links:
+      - docker_mongodb
+    volumes:
+      - ./mongodb/mongo-seed:/mongo-seed
+    command: bash -c "
+      chmod +x /mongo-seed/import.sh
+      && /mongo-seed/import.sh"
+networks:
+  default:
+    external:
+      name: external-connect

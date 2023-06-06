@@ -1,0 +1,28 @@
+version: "3.8"
+services:
+  docker_mysqldb:
+    image: mysql/mysql-server:5.7
+    container_name: "docker_mysqldb"
+    environment:
+      TZ: Asia/Taipei
+      MYSQL_USER: test
+      MYSQL_PASSWORD: test
+      MYSQL_DATABASE: testdb
+      MYSQL_ROOT_PASSWORD: test
+      LANG: C.UTF-8
+    volumes:
+      - ./mysqldb/files/sqls:/docker-entrypoint-initdb.d
+      #- dbdata:/var/lib/mysql
+      #- ./files/my.cnf:/etc/mysql/my.cnf
+    command: [
+      '--character-set-server=utf8mb4',
+      '--collation-server=utf8mb4_general_ci'
+    ]
+    ports:
+       - 3306:3306
+# volumes:
+#   dbdata:
+# networks:
+#   default:
+#     external:
+#       name: external-connect
